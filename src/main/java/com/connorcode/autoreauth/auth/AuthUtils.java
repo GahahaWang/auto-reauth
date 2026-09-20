@@ -77,6 +77,17 @@ public class AuthUtils {
         }
     }
 
+    // Swaps in an empty session token, useful for testing reauthentication
+    public static void invalidateSession() {
+        var session = client.getUser();
+        try {
+            setSession(new User(session.getName(), session.getProfileId(), "", session.getXuid(), session.getClientId()));
+        } catch (AuthenticationException ignored) {
+        }
+        sentToast = false;
+        authStatus = getAuthStatus();
+    }
+
     public static void connectToServer(ServerAddress address, ServerData info, boolean quickPlay) {
         var connectScreen = new ConnectScreen(new TitleScreen(), quickPlay ? QuickPlay.ERROR_TITLE : CommonComponents.CONNECT_FAILED);
         client.disconnect(connectScreen, false);
